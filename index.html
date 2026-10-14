@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CertiCraft Studio - Premium Certificate Generator & Editor</title>
+  <meta name="description"
+    content="Design, edit, personalize, and print high-resolution professional certificates with live WYSIWYG editing, custom signatures, seals, and batch generation.">
+
+  <!-- Google Fonts: Luxury, Serif, Sans, and Handwriting/Calligraphy -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Alex+Brush&family=Montserrat:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,400;1,600&family=Pinyon+Script&family=Allura&family=Dancing+Script:wght@600;700&family=Parisienne&display=swap"
+    rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- html2canvas and jsPDF for reliable HD PDF & image export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- QRCode.js for authentic certificate verification QR code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="theme-dark">
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="logo-icon-wrapper kh-brand-logo-box" title="KauraHub & EETIRP Studio">
+        <img src="kaurahub-logo.svg" alt="KauraHub" class="brand-kh-img">
+      </div>
+      <div class="brand-text">
+        <span class="brand-title">KAURAHUB × EETIRP</span>
+        <span class="brand-subtitle">CERTIFICATION & STANDARDS</span>
+      </div>
+    </div>
+
+    <!-- Quick Presets Carousel -->
+    <div class="header-presets">
+      <span class="preset-label"><i data-lucide="sparkles"></i> Preset:</span>
+      <select id="presetSelect" class="preset-dropdown" title="Choose template preset">
+        <option value="completion">Certificate of Completion</option>
+        <option value="appreciation">Certificate of Appreciation</option>
+        <option value="achievement">Certificate of Excellence & Achievement</option>
+        <option value="attendance">Certificate of Participation</option>
+        <option value="honor">Diploma of Honor</option>
+        <option value="blank">Custom Blank Canvas</option>
+      </select>
+    </div>
+
+    <!-- Top Action Buttons -->
+    <div class="header-actions">
+      <button id="batchModalBtn" class="btn btn-glass" title="Generate multiple certificates from names list">
+        <i data-lucide="users"></i>
+        <span>Bulk Mode</span>
+      </button>
+
+      <button id="toggleEditModeBtn" class="btn btn-glass" title="Toggle Click-to-Edit mode highlight">
+        <i data-lucide="edit-3"></i>
+        <span>Direct Edit</span>
+      </button>
+
+      <div class="action-divider"></div>
+
+      <button id="printBtn" class="btn btn-secondary" title="Direct Print to Paper or Save as System PDF">
+        <i data-lucide="printer"></i>
+        <span>Print</span>
+      </button>
+
+      <div class="dropdown-wrapper">
+        <button id="exportDropdownBtn" class="btn btn-primary">
+          <i data-lucide="download"></i>
+          <span>Download</span>
+          <i data-lucide="chevron-down" class="dropdown-chevron"></i>
+        </button>
+        <div id="exportMenu" class="dropdown-menu">
+          <button id="downloadPdfBtn" class="dropdown-item">
+            <i data-lucide="file-text"></i>
+            <div>
+              <div class="item-title">PDF Document</div>
+              <div class="item-desc">High resolution vector printable (A4)</div>
+            </div>
+          </button>
+          <button id="downloadPngBtn" class="dropdown-item">
+            <i data-lucide="image"></i>
+            <div>
+              <div class="item-title">PNG Image</div>
+              <div class="item-desc">Ultra-sharp 300 DPI graphic</div>
+            </div>
+          </button>
+          <button id="downloadJpgBtn" class="dropdown-item">
+            <i data-lucide="file-image"></i>
+            <div>
+              <div class="item-title">JPEG Image</div>
+              <div class="item-desc">Optimized for sharing & web</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main App Layout -->
+  <div class="app-workspace">
+
+    <!-- Left Sidebar: Comprehensive Customizer -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-tabs">
+        <button class="tab-btn active" data-tab="content-tab" title="Content & Text">
+          <i data-lucide="type"></i>
+          <span>Text</span>
+        </button>
+        <button class="tab-btn" data-tab="design-tab" title="Themes & Style">
+          <i data-lucide="palette"></i>
+          <span>Design</span>
+        </button>
+        <button class="tab-btn" data-tab="elements-tab" title="Badges, QR & Seal">
+          <i data-lucide="shield-check"></i>
+          <span>Seals</span>
+        </button>
+        <button class="tab-btn" data-tab="signatures-tab" title="Signatures & Logo">
+          <i data-lucide="pen-tool"></i>
+          <span>Signatures</span>
+        </button>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="sidebar-content">
+
+        <!-- Tab 1: Content & Text Fields -->
+        <div class="tab-panel active" id="content-tab">
+          <div class="panel-header">
+            <h3>Certificate Details</h3>
+            <p class="panel-hint">Edit here or click any text directly on the certificate.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="inputOrgName">Organization / Institution</label>
+            <input type="text" id="inputOrgName" value="KAURAHUB × EETIRP" placeholder="Issuing Institution">
+          </div>
+
+          <div class="form-group">
+            <label for="inputCertTitle">Certificate Title</label>
+            <input type="text" id="inputCertTitle" value="CERTIFICATE OF ACHIEVEMENT"
+              placeholder="e.g. CERTIFICATE OF APPRECIATION">
+          </div>
+
+          <div class="form-group">
+            <label for="inputPresentation">Presentation Line</label>
+            <input type="text" id="inputPresentation" value="PROUDLY PRESENTED TO"
+              placeholder="e.g. THIS IS PROUDLY CONFERRED UPON">
+          </div>
+
+          <div class="form-group highlight-group">
+            <label for="inputRecipient">Recipient Full Name</label>
+            <input type="text" id="inputRecipient" class="input-recipient" value="Alexander Montgomery"
+              placeholder="Full Name">
+          </div>
+
+          <div class="form-group">
+            <label for="inputCourse">For Accomplishment In</label>
+            <input type="text" id="inputCourse" value="Advanced Full-Stack Engineering & System Architecture"
+              placeholder="Course, Competition, or Award Title">
+          </div>
+
+          <div class="form-group">
+            <label for="inputDescription">Description / Recognition Message</label>
+            <textarea id="inputDescription" rows="3"
+              placeholder="Explain the achievement or honors...">for outstanding performance, exceptional dedication, and mastery of professional core competencies throughout the comprehensive executive certification curriculum.</textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="inputDate">Issue Date</label>
+              <input type="text" id="inputDate" value="October 14, 2026" placeholder="Issue Date">
+            </div>
+            <div class="form-group col">
+              <label for="inputCertId">Certificate ID</label>
+              <div class="input-action-wrapper">
+                <input type="text" id="inputCertId" value="CERT-2026-8947A" placeholder="ID Number">
+                <button id="generateIdBtn" class="btn-mini" title="Generate New ID"><i
+                    data-lucide="refresh-cw"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Design, Themes & Fonts -->
+        <div class="tab-panel" id="design-tab">
+          <div class="panel-header">
+            <h3>Themes & Styling</h3>
+            <p class="panel-hint">Select luxury motifs, decorative frames, and palettes.</p>
+          </div>
+
+          <div class="form-group">
+            <label>Design Style / Border Template</label>
+            <div class="theme-grid">
+              <div class="theme-card active" data-style="royal-gold">
+                <div class="theme-preview royal-gold-preview"></div>
+                <span>Royal Gold & Navy</span>
+              </div>
+              <div class="theme-card" data-style="emerald-bronze">
+                <div class="theme-preview emerald-bronze-preview"></div>
+                <span>Emerald Silk</span>
+              </div>
+              <div class="theme-card" data-style="crimson-luxury">
+                <div class="theme-preview crimson-luxury-preview"></div>
+                <span>Crimson Executive</span>
+              </div>
+              <div class="theme-card" data-style="monochrome-slate">
+                <div class="theme-preview monochrome-slate-preview"></div>
+                <span>Modern Minimalist</span>
+              </div>
+              <div class="theme-card" data-style="vintage-parchment">
+                <div class="theme-preview vintage-parchment-preview"></div>
+                <span>Vintage Parchment</span>
+              </div>
+              <div class="theme-card" data-style="geometric-tech">
+                <div class="theme-preview geometric-tech-preview"></div>
+                <span>Tech Obsidian</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fontSelect">Primary Title Font</label>
+            <select id="fontSelect" class="form-select">
+              <option value="'Cinzel', serif">Cinzel (Regal Classical Roman)</option>
+              <option value="'Playfair Display', serif">Playfair Display (Editorial High-Fashion)</option>
+              <option value="'Cormorant Garamond', serif">Cormorant Garamond (Graceful Academic)</option>
+              <option value="'Montserrat', sans-serif">Montserrat (Bold Modern Prestige)</option>
+              <option value="'Outfit', sans-serif">Outfit (Clean Minimal Tech)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="recipientFontSelect">Recipient Name Font</label>
+            <select id="recipientFontSelect" class="form-select">
+              <option value="'Playfair Display', serif">Playfair Display (Classy Bold Serif)</option>
+              <option value="'Great Vibes', cursive">Great Vibes (Fine Script Calligraphy)</option>
+              <option value="'Alex Brush', cursive">Alex Brush (Flowing Penmanship)</option>
+              <option value="'Cinzel', serif">Cinzel (Roman Monumental)</option>
+              <option value="'Pinyon Script', cursive">Pinyon Script (Traditional Formal Hand)</option>
+              <option value="'Montserrat', sans-serif">Montserrat (Geometric Modern)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Color Customizer</label>
+            <div class="color-picker-row">
+              <div class="color-item">
+                <label for="customAccentColor">Accent / Gold</label>
+                <input type="color" id="customAccentColor" value="#d4af37">
+              </div>
+              <div class="color-item">
+                <label for="customBorderColor">Border Tone</label>
+                <input type="color" id="customBorderColor" value="#112233">
+              </div>
+              <div class="color-item">
+                <label for="customBgColor">Parchment Tint</label>
+                <input type="color" id="customBgColor" value="#ffffff">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Page Orientation</label>
+            <div class="segmented-control">
+              <button class="seg-btn active" data-orientation="landscape"><i data-lucide="rectangle-horizontal"></i>
+                Landscape (Standard)</button>
+              <button class="seg-btn" data-orientation="portrait"><i data-lucide="rectangle-vertical"></i>
+                Portrait</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Seals, Emblems & QR Code -->
+        <div class="tab-panel" id="elements-tab">
+          <div class="panel-header">
+            <h3>Emblem & Security Badges</h3>
+            <p class="panel-hint">Choose authentic metallic seals and verification features.</p>
+          </div>
+
+          <div class="form-group">
+            <label>Official Seal Emblem</label>
+            <div class="seal-selection-grid">
+              <div class="seal-opt active" data-seal="gold-crest">
+                <svg viewBox="0 0 100 100" class="seal-icon-svg">
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-dasharray="3 3" />
+                  <circle cx="50" cy="50" r="36" fill="currentColor" opacity="0.15" />
+                  <polygon points="50,18 58,35 77,35 62,47 67,65 50,54 33,65 38,47 23,35 42,35" fill="currentColor" />
+                </svg>
+                <span>Imperial Star</span>
+              </div>
+              <div class="seal-opt" data-seal="laurel-wreath">
+                <svg viewBox="0 0 100 100" class="seal-icon-svg">
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="2" />
+                  <path d="M50 15 A 35 35 0 0 0 25 70 A 35 35 0 0 1 50 25" fill="currentColor" opacity="0.7" />
+                  <path d="M50 15 A 35 35 0 0 1 75 70 A 35 35 0 0 0 50 25" fill="currentColor" opacity="0.7" />
+                  <circle cx="50" cy="50" r="16" fill="currentColor" />
+                </svg>
+                <span>Laurel Wreath</span>
+              </div>
+              <div class="seal-opt" data-seal="certified-ribbon">
+                <svg viewBox="0 0 100 100" class="seal-icon-svg">
+                  <path d="M35 75 L30 95 L50 86 L70 95 L65 75" fill="currentColor" opacity="0.5" />
+                  <circle cx="50" cy="45" r="32" fill="currentColor" />
+                  <path d="M42 45 L48 51 L60 38" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" />
+                </svg>
+                <span>Guaranteed</span>
+              </div>
+              <div class="seal-opt" data-seal="none">
+                <div class="seal-none"><i data-lucide="eye-off"></i></div>
+                <span>None</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sealText">Seal Outer Text</label>
+            <input type="text" id="sealText" value="OFFICIAL EXCELLENCE AWARD • VERIFIED & ACCREDITED •"
+              placeholder="Seal Circular Text">
+          </div>
+
+          <div class="toggle-group">
+            <label class="toggle-label" for="toggleQr">
+              <div>
+                <span class="toggle-title">Verification QR Code</span>
+                <span class="toggle-desc">Renders an authentic verification QR badge</span>
+              </div>
+              <input type="checkbox" id="toggleQr" checked>
+              <span class="toggle-switch"></span>
+            </label>
+          </div>
+
+          <div class="form-group" id="qrUrlWrapper">
+            <label for="qrVerifyUrl">Verification URL / Hash</label>
+            <input type="text" id="qrVerifyUrl" value="https://verify.certicraft.org/cert/CERT-2026-8947A"
+              placeholder="URL or string to encode">
+          </div>
+
+          <div class="toggle-group">
+            <label class="toggle-label" for="toggleFlourishes">
+              <div>
+                <span class="toggle-title">Ornate Corner Accents</span>
+                <span class="toggle-desc">Decorative vintage corner cornerstones</span>
+              </div>
+              <input type="checkbox" id="toggleFlourishes" checked>
+              <span class="toggle-switch"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Tab 4: Signatures & Organization Logo -->
+        <div class="tab-panel" id="signatures-tab">
+          <div class="panel-header">
+            <h3>Signatures & Logos</h3>
+            <p class="panel-hint">Draw, type calligraphy, choose executive styles, or upload your signature.</p>
+          </div>
+
+          <!-- Organization Logos & Branding Customizer -->
+          <div class="form-group logo-branding-section">
+            <div class="section-title-row">
+              <label><i data-lucide="shield-check"></i> Organization Brand & Logo</label>
+              <span class="badge-pill">Recolorable</span>
+            </div>
+
+            <!-- Brand Selection Segmented Control (KauraHub, EETIRP, Dual) -->
+            <div class="brand-select-segmented">
+              <button type="button" class="brand-select-btn" data-brand="kaurahub" id="btnBrandKaurahub" title="Use KauraHub as Primary Brand">
+                <i data-lucide="award"></i>
+                <span>KauraHub</span>
+              </button>
+              <button type="button" class="brand-select-btn" data-brand="eetirp" id="btnBrandEetirp" title="Use EETIRP as Primary Brand">
+                <i data-lucide="hexagon"></i>
+                <span>EETIRP</span>
+              </button>
+              <button type="button" class="brand-select-btn active" data-brand="dual" id="btnBrandDual" title="Use Both Logos Together (KauraHub + EETIRP)">
+                <i data-lucide="layers"></i>
+                <span>Dual (Both)</span>
+              </button>
+            </div>
+
+            <!-- Logo Display Mode Switcher -->
+            <div class="logo-display-segmented">
+              <button type="button" class="logo-mode-btn active" data-mode="vector-badge" id="btnLogoModeBadge" title="Modern Badge Style">
+                <i data-lucide="shield"></i>
+                <span>Emblem Badge</span>
+              </button>
+              <button type="button" class="logo-mode-btn" data-mode="vector-clean" id="btnLogoModeClean" title="Clean Vector Mark (Recolorable)">
+                <i data-lucide="sparkles"></i>
+                <span>Vector Mark</span>
+              </button>
+              <button type="button" class="logo-mode-btn" data-mode="image-original" id="btnLogoModeImage" title="Original Uploaded Image Graphic">
+                <i data-lucide="image"></i>
+                <span>Original File</span>
+              </button>
+            </div>
+
+            <!-- Logo Color Palette Selector -->
+            <div class="logo-color-wrapper" id="logoColorWrapper">
+              <label class="sub-label">Logo Color Palette</label>
+              <div class="logo-color-palette">
+                <button type="button" class="logo-color-chip active" data-color="original" title="Electric Blue & Cyan (Original)" style="background: linear-gradient(135deg, #00d2ff, #0066ff);"></button>
+                <button type="button" class="logo-color-chip" data-color="gold" title="Royal Luxury Gold" style="background: linear-gradient(135deg, #f59e0b, #b45309);"></button>
+                <button type="button" class="logo-color-chip" data-color="emerald" title="Emerald & Jade" style="background: linear-gradient(135deg, #34d399, #059669);"></button>
+                <button type="button" class="logo-color-chip" data-color="crimson" title="Crimson Luxury" style="background: linear-gradient(135deg, #f87171, #dc2626);"></button>
+                <button type="button" class="logo-color-chip" data-color="monochrome" title="Monochrome Slate" style="background: linear-gradient(135deg, #64748b, #0f172a);"></button>
+              </div>
+
+              <!-- Live Custom Color Picker -->
+              <div class="custom-logo-color-row">
+                <label class="custom-color-label" for="customLogoPrimaryColor">Custom Hue:</label>
+                <div class="color-picker-input-wrap">
+                  <input type="color" id="customLogoPrimaryColor" value="#00d2ff" title="Pick Primary Logo Color">
+                  <span id="customLogoColorHex" class="color-hex-text">#00d2ff</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Logo Display Size Slider -->
+            <div class="logo-size-wrapper">
+              <div class="range-header">
+                <label class="sub-label" for="logoSizeSlider">Logo Display Size</label>
+                <span id="logoSizeVal" class="range-val">58px</span>
+              </div>
+              <input type="range" id="logoSizeSlider" min="36" max="96" value="58" class="custom-range">
+            </div>
+
+            <!-- Upload Custom File Option -->
+            <div class="file-upload-box" style="margin-top: 12px;">
+              <input type="file" id="logoUploadInput" accept="image/*">
+              <div class="upload-cta">
+                <i data-lucide="upload-cloud"></i>
+                <span>Upload Custom Replacement Logo</span>
+              </div>
+              <button id="resetKauraLogoBtn" class="btn-tiny btn-secondary" title="Reset brand logos">
+                <i data-lucide="rotate-ccw"></i> Reset Logos
+              </button>
+            </div>
+          </div>
+
+          <!-- Toggle Second Signatory -->
+          <div class="toggle-group">
+            <label class="toggle-label" for="toggleSigner2">
+              <div>
+                <span class="toggle-title">Include Second Signatory</span>
+                <span class="toggle-desc">Show both left and right signatures</span>
+              </div>
+              <input type="checkbox" id="toggleSigner2" checked>
+              <span class="toggle-switch"></span>
+            </label>
+          </div>
+
+          <!-- Signature 1 Section -->
+          <div class="signatory-card">
+            <div class="signatory-header">
+              <span class="signatory-title">First Signatory (Left)</span>
+              <button class="btn-mini-text open-sign-modal-btn" data-signer="1"><i data-lucide="pen-tool"></i> Change
+                Sign</button>
+            </div>
+            <div class="form-group">
+              <label for="inputSigner1Name">Signatory Name</label>
+              <input type="text" id="inputSigner1Name" value="Dr. Evelyn Vance" placeholder="Signer's Name">
+            </div>
+            <div class="form-group">
+              <label for="inputSigner1Title">Signatory Title</label>
+              <input type="text" id="inputSigner1Title" value="Dean of Academic Council" placeholder="Signer's Title">
+            </div>
+            <div class="form-group">
+              <label for="signer1FontSelect">Signature Style Font</label>
+              <select id="signer1FontSelect" class="form-select">
+                <option value="'Great Vibes', cursive">Great Vibes (Classic Flow)</option>
+                <option value="'Alex Brush', cursive">Alex Brush (Fine Penmanship)</option>
+                <option value="'Pinyon Script', cursive">Pinyon Script (Diplomatic Formal)</option>
+                <option value="'Allura', cursive">Allura (Graceful Flourish)</option>
+                <option value="'Dancing Script', cursive">Dancing Script (Modern Script)</option>
+                <option value="'Parisienne', cursive">Parisienne (Executive Chic)</option>
+              </select>
+            </div>
+            <div class="signature-action-row">
+              <button class="btn btn-secondary btn-full open-sign-modal-btn" data-signer="1">
+                <i data-lucide="feather"></i> Change / Draw Signature 1
+              </button>
+            </div>
+          </div>
+
+          <!-- Signature 2 Section -->
+          <div class="signatory-card" id="signerCard2Wrapper">
+            <div class="signatory-header">
+              <span class="signatory-title">Second Signatory (Right)</span>
+              <button class="btn-mini-text open-sign-modal-btn" data-signer="2"><i data-lucide="pen-tool"></i> Change
+                Sign</button>
+            </div>
+            <div class="form-group">
+              <label for="inputSigner2Name">Signatory Name</label>
+              <input type="text" id="inputSigner2Name" value="Marcus Sterling" placeholder="Signer's Name">
+            </div>
+            <div class="form-group">
+              <label for="inputSigner2Title">Signatory Title</label>
+              <input type="text" id="inputSigner2Title" value="Director of Certification & Standards"
+                placeholder="Signer's Title">
+            </div>
+            <div class="form-group">
+              <label for="signer2FontSelect">Signature Style Font</label>
+              <select id="signer2FontSelect" class="form-select">
+                <option value="'Great Vibes', cursive">Great Vibes (Classic Flow)</option>
+                <option value="'Alex Brush', cursive">Alex Brush (Fine Penmanship)</option>
+                <option value="'Pinyon Script', cursive">Pinyon Script (Diplomatic Formal)</option>
+                <option value="'Allura', cursive">Allura (Graceful Flourish)</option>
+                <option value="'Dancing Script', cursive">Dancing Script (Modern Script)</option>
+                <option value="'Parisienne', cursive">Parisienne (Executive Chic)</option>
+              </select>
+            </div>
+            <div class="signature-action-row">
+              <button class="btn btn-secondary btn-full open-sign-modal-btn" data-signer="2">
+                <i data-lucide="feather"></i> Change / Draw Signature 2
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Center Stage: Live Certificate Canvas -->
+    <main class="preview-stage">
+
+      <!-- Stage Toolbar -->
+      <div class="stage-controls">
+        <div class="zoom-controls">
+          <button id="zoomOutBtn" class="control-btn" title="Zoom Out"><i data-lucide="minus"></i></button>
+          <span id="zoomLevel">100%</span>
+          <button id="zoomInBtn" class="control-btn" title="Zoom In"><i data-lucide="plus"></i></button>
+          <button id="zoomFitBtn" class="control-btn" title="Fit to Screen"><i data-lucide="maximize-2"></i></button>
+        </div>
+
+        <div class="edit-mode-hint" id="editHintBanner">
+          <i data-lucide="info"></i>
+          <span><strong>WYSIWYG Active:</strong> Click any text directly on the certificate to edit!</span>
+        </div>
+
+        <div class="stage-actions">
+          <button id="resetCertificateBtn" class="control-btn" title="Reset to Defaults"><i
+              data-lucide="rotate-ccw"></i></button>
+        </div>
+      </div>
+
+      <!-- The Certificate Container (Scale-transformed wrapper) -->
+      <div class="certificate-viewport" id="certificateViewport">
+        <div class="certificate-wrapper" id="certificateWrapper">
+
+          <!-- Printable Certificate Node -->
+          <div class="certificate landscape theme-style-royal-gold" id="certificateNode">
+
+            <!-- Guilloche / Decorative Multi-Layer Borders -->
+            <div class="cert-outer-border">
+              <div class="cert-inner-border">
+                <div class="cert-pin-border"></div>
+
+                <!-- Ornate Corner SVGs -->
+                <div class="ornament-corner top-left">
+                  <svg viewBox="0 0 100 100" class="corner-svg">
+                    <path d="M 0,0 L 90,0 Q 40,5 20,20 Q 5,40 0,90 Z" fill="currentColor" />
+                    <path d="M 12,12 L 70,12 Q 35,16 20,30 Q 16,35 12,70 Z" fill="none" stroke="currentColor"
+                      stroke-width="2" />
+                    <circle cx="35" cy="35" r="6" fill="currentColor" />
+                  </svg>
+                </div>
+                <div class="ornament-corner top-right">
+                  <svg viewBox="0 0 100 100" class="corner-svg">
+                    <path d="M 0,0 L 90,0 Q 40,5 20,20 Q 5,40 0,90 Z" fill="currentColor" />
+                    <path d="M 12,12 L 70,12 Q 35,16 20,30 Q 16,35 12,70 Z" fill="none" stroke="currentColor"
+                      stroke-width="2" />
+                    <circle cx="35" cy="35" r="6" fill="currentColor" />
+                  </svg>
+                </div>
+                <div class="ornament-corner bottom-left">
+                  <svg viewBox="0 0 100 100" class="corner-svg">
+                    <path d="M 0,0 L 90,0 Q 40,5 20,20 Q 5,40 0,90 Z" fill="currentColor" />
+                    <path d="M 12,12 L 70,12 Q 35,16 20,30 Q 16,35 12,70 Z" fill="none" stroke="currentColor"
+                      stroke-width="2" />
+                    <circle cx="35" cy="35" r="6" fill="currentColor" />
+                  </svg>
+                </div>
+                <div class="ornament-corner bottom-right">
+                  <svg viewBox="0 0 100 100" class="corner-svg">
+                    <path d="M 0,0 L 90,0 Q 40,5 20,20 Q 5,40 0,90 Z" fill="currentColor" />
+                    <path d="M 12,12 L 70,12 Q 35,16 20,30 Q 16,35 12,70 Z" fill="none" stroke="currentColor"
+                      stroke-width="2" />
+                    <circle cx="35" cy="35" r="6" fill="currentColor" />
+                  </svg>
+                </div>
+
+                <!-- Watermark Background Emblem (Subtle) -->
+                <div class="cert-watermark">
+                  <svg viewBox="0 0 200 200" class="watermark-svg">
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" stroke-width="4"
+                      stroke-opacity="0.04" />
+                    <polygon points="100,25 122,70 171,70 131,100 146,145 100,117 54,145 69,100 29,70 78,70"
+                      fill="currentColor" fill-opacity="0.03" />
+                  </svg>
+                </div>
+
+                <!-- Certificate Inner Layout Grid -->
+                <div class="cert-content">
+
+                  <!-- Top Bar: Logo / Emblem & Organization -->
+                  <div class="cert-top-header">
+                    <div class="cert-logo-container" id="certLogoBox">
+                      <!-- KauraHub Official Dynamic Logo Component -->
+                      <div id="certKhLogoWrapper" class="cert-kh-logo-wrapper logo-mode-vector-badge logo-color-original" title="KauraHub Logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 205" class="kaurahub-svg-mark" id="certKhSvg">
+                          <defs>
+                            <linearGradient id="khAccentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stop-color="var(--kh-accent-1, #00d2ff)" />
+                              <stop offset="100%" stop-color="var(--kh-accent-2, #0066ff)" />
+                            </linearGradient>
+                            <linearGradient id="khPillarGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stop-color="var(--kh-pillar-1, #ffffff)" />
+                              <stop offset="100%" stop-color="var(--kh-pillar-2, #e2e8f0)" />
+                            </linearGradient>
+                            <linearGradient id="khTextGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stop-color="var(--kh-text-1, #0f172a)" />
+                              <stop offset="100%" stop-color="var(--kh-text-2, #1e293b)" />
+                            </linearGradient>
+                          </defs>
+                          <g id="khEmblem" transform="translate(0, 5)">
+                            <!-- Right Pillar of H -->
+                            <path d="M 178 54 L 204 54 L 204 126 C 204 133 198 138 191 138 L 189 138 C 182 138 178 133 178 126 Z" 
+                                  fill="url(#khPillarGrad)" class="kh-pillar-elem" />
+                            <!-- Left Pillar & Crossbar of H -->
+                            <path d="M 134 76 L 156 76 C 160 76 163 79 163 83 L 163 126 C 163 133 158 138 151 138 L 144 138 C 138 138 134 133 134 126 Z" 
+                                  fill="url(#khPillarGrad)" class="kh-pillar-elem" />
+                            <rect x="150" y="90" width="30" height="20" fill="url(#khPillarGrad)" class="kh-pillar-elem" />
+                            <!-- K - Vertical Stem -->
+                            <path d="M 88 44 C 82 44 78 48 78 54 L 78 126 C 78 134 83 138 90 138 L 102 138 C 106 138 108 135 108 130 L 108 50 C 108 46 105 44 100 44 Z" 
+                                  fill="url(#khAccentGrad)" class="kh-accent-elem" />
+                            <!-- K - Upper Diagonal Branch -->
+                            <path d="M 104 88 L 146 48 C 151 43 157 44 161 48 L 165 52 C 169 57 169 63 164 68 L 124 106 Z" 
+                                  fill="url(#khAccentGrad)" class="kh-accent-elem" />
+                            <!-- Dynamic Arch Swoosh connecting K into H -->
+                            <path d="M 85 138 C 96 122 118 106 148 94 C 178 82 208 72 232 50 C 228 62 210 78 184 92 C 154 108 126 120 98 140 Z" 
+                                  fill="url(#khAccentGrad)" class="kh-accent-elem" />
+                            <!-- Graduation Cap atop right pillar -->
+                            <polygon points="191,14 222,27 191,40 160,27" fill="url(#khAccentGrad)" class="kh-accent-elem" />
+                            <path d="M 172 32 Q 191 40 210 32 L 210 38 Q 191 46 172 38 Z" fill="url(#khAccentGrad)" opacity="0.95" class="kh-accent-elem" />
+                            <circle cx="191" cy="27" r="3" fill="url(#khPillarGrad)" class="kh-pillar-elem" />
+                            <path d="M 191 27 Q 218 31 220 44 L 220 52" fill="none" stroke="url(#khAccentGrad)" stroke-width="2" stroke-linecap="round" class="kh-accent-elem" />
+                            <polygon points="218,52 222,52 221,60 219,60" fill="url(#khAccentGrad)" class="kh-accent-elem" />
+                          </g>
+                          <!-- Typography: KAURAHUB -->
+                          <g id="khText" transform="translate(0, 182)">
+                            <text x="160" y="0" text-anchor="middle" font-family="'Montserrat', 'Outfit', 'Inter', sans-serif" font-size="28" font-weight="900" letter-spacing="4">
+                              <tspan fill="url(#khTextGrad)" class="kh-text-kaura">KAURA</tspan><tspan fill="url(#khAccentGrad)" class="kh-text-hub">HUB</tspan>
+                            </text>
+                          </g>
+                        </svg>
+                        <img id="certKhOriginalImg" src="kaurahub-logo.jpg" alt="KauraHub Logo" class="cert-kh-logo-img hidden">
+                      </div>
+
+                      <!-- Dual Logo Connector / Divider (KauraHub & EETIRP together) -->
+                      <div id="certLogoDivider" class="cert-logo-divider">
+                        <span class="cert-divider-cross">×</span>
+                      </div>
+
+                      <!-- EETIRP Official Logo Component -->
+                      <div id="certEetirpLogoWrapper" class="cert-eetirp-logo-wrapper logo-mode-vector-badge logo-color-original" title="EETIRP Logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 300" class="eetirp-svg-mark" id="certEetirpSvg">
+                          <defs>
+                            <linearGradient id="eeBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stop-color="var(--kh-accent-1, #0077ff)" />
+                              <stop offset="100%" stop-color="var(--kh-accent-2, #0051cb)" />
+                            </linearGradient>
+                            <linearGradient id="eeDarkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stop-color="var(--kh-text-1, #0a192f)" />
+                              <stop offset="100%" stop-color="var(--kh-text-2, #07111e)" />
+                            </linearGradient>
+                            <linearGradient id="eeCyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                              <stop offset="0%" stop-color="var(--kh-accent-1, #00d2ff)" />
+                              <stop offset="100%" stop-color="var(--kh-accent-2, #0099ff)" />
+                            </linearGradient>
+                          </defs>
+                          <g id="eeEmblem" transform="translate(145, 10)">
+                            <polygon points="20,10 90,10 82,32 30,32" fill="url(#eeDarkGrad)" />
+                            <polygon points="5,38 20,10 30,32 18,52" fill="url(#eeDarkGrad)" opacity="0.9" />
+                            <polygon points="2,60 70,60 62,82 14,82" fill="url(#eeDarkGrad)" />
+                            <polygon points="2,60 14,82 28,110 16,110" fill="url(#eeDarkGrad)" opacity="0.95" />
+                            <polygon points="16,110 28,110 40,88 90,88 78,110 32,110" fill="url(#eeDarkGrad)" />
+                            <polygon points="90,10 102,10 134,60 102,110 90,110 118,60" fill="url(#eeBlueGrad)" />
+                            <polygon points="78,110 90,110 118,60 106,60" fill="url(#eeBlueGrad)" opacity="0.85" />
+                          </g>
+                          <g id="eeWordmark" transform="translate(0, 180)">
+                            <text x="225" y="0" text-anchor="middle" font-family="'Outfit', 'Montserrat', sans-serif" font-size="46" font-weight="900" letter-spacing="12" fill="url(#eeDarkGrad)">
+                              EET<tspan fill="url(#eeCyanGrad)">I</tspan>RP
+                            </text>
+                            <g transform="translate(0, 36)">
+                              <line x1="45" y1="-5" x2="85" y2="-5" stroke="url(#eeCyanGrad)" stroke-width="2" />
+                              <text x="225" y="0" text-anchor="middle" font-family="'Outfit', 'Montserrat', sans-serif" font-size="12" font-weight="700" letter-spacing="4" fill="url(#eeDarkGrad)" opacity="0.85">
+                                INNOVATE. INTEGRATE. ELEVATE.
+                              </text>
+                              <line x1="365" y1="-5" x2="405" y2="-5" stroke="url(#eeCyanGrad)" stroke-width="2" />
+                            </g>
+                          </g>
+                        </svg>
+                        <img id="certEetirpOriginalImg" src="eetirp-logo.png" alt="EETIRP Logo" class="cert-eetirp-logo-img hidden">
+                      </div>
+
+                      <img id="certCustomLogo" class="cert-custom-logo hidden" alt="Organization Logo">
+                    </div>
+                    <div class="cert-org editable-element" id="certOrg" contenteditable="true" spellcheck="false">
+                      KAURAHUB  ×  EETIRP
+                    </div>
+                  </div>
+
+                  <!-- Title Section -->
+                  <div class="cert-title-container">
+                    <h1 class="cert-title editable-element" id="certTitle" contenteditable="true" spellcheck="false">
+                      CERTIFICATE OF ACHIEVEMENT
+                    </h1>
+                    <div class="cert-title-divider">
+                      <span class="line left"></span>
+                      <i data-lucide="award" class="divider-icon"></i>
+                      <span class="line right"></span>
+                    </div>
+                    <div class="cert-presentation editable-element" id="certPresentation" contenteditable="true"
+                      spellcheck="false">
+                      PROUDLY PRESENTED TO
+                    </div>
+                  </div>
+
+                  <!-- Recipient Section -->
+                  <div class="cert-recipient-container">
+                    <div class="cert-recipient editable-element" id="certRecipient" contenteditable="true"
+                      spellcheck="false">
+                      Alexander Montgomery
+                    </div>
+                    <div class="cert-recipient-underline"></div>
+                  </div>
+
+                  <!-- Achievement / Course Section -->
+                  <div class="cert-body-container">
+                    <div class="cert-course editable-element" id="certCourse" contenteditable="true" spellcheck="false">
+                      Advanced Full-Stack Engineering & System Architecture
+                    </div>
+                    <div class="cert-description editable-element" id="certDescription" contenteditable="true"
+                      spellcheck="false">
+                      for outstanding performance, exceptional dedication, and mastery of professional core competencies
+                      throughout the comprehensive executive certification curriculum.
+                    </div>
+                  </div>
+
+                  <!-- Bottom Section: Signatures, Seal, QR Code & ID -->
+                  <div class="cert-footer">
+
+                    <!-- Left Signatory -->
+                    <div class="cert-signature-block left" id="certSignBlock1">
+                      <div class="signature-render-area" id="signArea1" title="Click to Change Signature">
+                        <span class="font-signature" id="fontSign1">Dr. Evelyn Vance</span>
+                        <img id="imgSign1" class="img-signature hidden" alt="Signature 1">
+                        <div id="svgSign1" class="svg-signature-box hidden"></div>
+                        <button class="change-sign-float-btn" data-signer="1" title="Change this signature">
+                          <i data-lucide="pen-tool"></i> Change Sign
+                        </button>
+                      </div>
+                      <div class="signature-line"></div>
+                      <div class="signer-name editable-element" id="certSigner1Name" contenteditable="true"
+                        spellcheck="false">Dr. Evelyn Vance</div>
+                      <div class="signer-title editable-element" id="certSigner1Title" contenteditable="true"
+                        spellcheck="false">Dean of Academic Council</div>
+                    </div>
+
+                    <!-- Center Emblem / Seal -->
+                    <div class="cert-center-seal-block" id="sealBlock">
+                      <div class="seal-container" id="certSealContainer">
+
+                        <!-- Rotating / Curving Text SVG Seal -->
+                        <div class="seal-badge-wrapper gold-foil" id="certSealBadge">
+                          <svg viewBox="0 0 160 160" class="seal-svg">
+                            <!-- Circular Text Path -->
+                            <defs>
+                              <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#fdf497" />
+                                <stop offset="30%" stop-color="#d4af37" />
+                                <stop offset="70%" stop-color="#b8860b" />
+                                <stop offset="100%" stop-color="#aa771c" />
+                              </linearGradient>
+                              <path id="circleTextPath"
+                                d="M 80, 80 m -62, 0 a 62,62 0 1,1 124,0 a 62,62 0 1,1 -124,0" />
+                            </defs>
+
+                            <!-- Starburst / Serrated Edge -->
+                            <circle cx="80" cy="80" r="74" fill="url(#goldGradient)" class="seal-bg-circle" />
+                            <circle cx="80" cy="80" r="66" fill="none" stroke="#fff" stroke-width="2"
+                              stroke-opacity="0.6" />
+                            <circle cx="80" cy="80" r="62" fill="none" stroke="#fff" stroke-width="1"
+                              stroke-dasharray="3,3" />
+
+                            <text class="seal-curved-text" font-size="9" font-weight="700" letter-spacing="2">
+                              <textPath href="#circleTextPath" startOffset="50%" text-anchor="middle" id="svgSealText">
+                                OFFICIAL EXCELLENCE AWARD • VERIFIED & ACCREDITED •
+                              </textPath>
+                            </text>
+
+                            <!-- Center Medal Motif -->
+                            <g transform="translate(80, 80)">
+                              <circle cx="0" cy="0" r="30" fill="none" stroke="#ffffff" stroke-width="1.5"
+                                stroke-opacity="0.8" />
+                              <polygon points="0,-18 5,-5 18,-5 8,4 12,17 0,9 -12,17 -8,4 -18,-5 -5,-5"
+                                fill="#ffffff" />
+                            </g>
+                          </svg>
+
+                          <!-- Golden Ribbon Tails -->
+                          <div class="seal-ribbon ribbon-left"></div>
+                          <div class="seal-ribbon ribbon-right"></div>
+                        </div>
+
+                      </div>
+
+                      <!-- Centered Security Verification QR Code -->
+                      <div class="cert-qr-box" id="certQrBox">
+                        <div id="qrcode"></div>
+                        <span class="qr-verify-label">Scan to Verify</span>
+                      </div>
+
+                      <!-- Verification Date & ID -->
+                      <div class="cert-meta-info">
+                        <div class="meta-date">Date: <span id="certDateSpan" class="editable-element"
+                            contenteditable="true">October 14, 2026</span></div>
+                        <div class="meta-id">Certificate ID: <span id="certIdSpan" class="editable-element"
+                            contenteditable="true">CERT-2026-8947A</span></div>
+                      </div>
+                    </div>
+
+                    <!-- Right Signatory -->
+                    <div class="cert-signature-block right" id="certSignBlock2">
+                      <div class="signature-render-area" id="signArea2" title="Click to Change Signature">
+                        <span class="font-signature" id="fontSign2">Marcus Sterling</span>
+                        <img id="imgSign2" class="img-signature hidden" alt="Signature 2">
+                        <div id="svgSign2" class="svg-signature-box hidden"></div>
+                        <button class="change-sign-float-btn" data-signer="2" title="Change this signature">
+                          <i data-lucide="pen-tool"></i> Change Sign
+                        </button>
+                      </div>
+                      <div class="signature-line"></div>
+                      <div class="signer-name editable-element" id="certSigner2Name" contenteditable="true"
+                        spellcheck="false">Marcus Sterling</div>
+                      <div class="signer-title editable-element" id="certSigner2Title" contenteditable="true"
+                        spellcheck="false">Director of Certification & Standards</div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Signature Customizer Modal -->
+  <div class="modal-overlay hidden" id="signModal">
+    <div class="modal-window sign-modal-window">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="feather"></i>
+          <h3 id="signModalTitle">Change Signature</h3>
+        </div>
+        <button class="modal-close-btn" id="closeSignModal"><i data-lucide="x"></i></button>
+      </div>
+
+      <!-- Signer Selector (Signatory 1 Left vs Signatory 2 Right) -->
+      <div class="modal-subtabs">
+        <button class="subtab-btn active" id="modalSigner1Btn" data-target-signer="1">
+          <i data-lucide="user"></i> First Signatory (Left)
+        </button>
+        <button class="subtab-btn" id="modalSigner2Btn" data-target-signer="2">
+          <i data-lucide="user"></i> Second Signatory (Right)
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Method Selector Tabs -->
+        <div class="sign-method-nav">
+          <button class="method-btn active" data-method="type">
+            <i data-lucide="type"></i> Type Calligraphy
+          </button>
+          <button class="method-btn" data-method="draw">
+            <i data-lucide="pen-tool"></i> Draw Live
+          </button>
+          <button class="method-btn" data-method="preset">
+            <i data-lucide="sparkles"></i> Executive Presets
+          </button>
+          <button class="method-btn" data-method="upload">
+            <i data-lucide="upload"></i> Upload Image
+          </button>
+        </div>
+
+        <!-- Ink Color Palette -->
+        <div class="ink-color-row">
+          <span class="ink-label"><i data-lucide="droplet"></i> Signature Ink:</span>
+          <div class="ink-options">
+            <button class="ink-btn active" data-ink="#0f172a" style="background: #0f172a;"
+              title="Midnight Black"></button>
+            <button class="ink-btn" data-ink="#1e3a8a" style="background: #1e3a8a;" title="Royal Navy Blue"></button>
+            <button class="ink-btn" data-ink="#3b2d1d" style="background: #3b2d1d;"
+              title="Classic Sepia / Charcoal"></button>
+            <button class="ink-btn" data-ink="#996515" style="background: #996515;"
+              title="Vintage Golden Bronze"></button>
+          </div>
+        </div>
+
+        <!-- Method Panel 1: Type Calligraphy -->
+        <div class="method-panel active" id="methodTypePanel">
+          <div class="form-group">
+            <label for="modalSignTextInput">Signature Display Text</label>
+            <input type="text" id="modalSignTextInput" value="Dr. Evelyn Vance"
+              placeholder="Enter name or initials for signature">
+          </div>
+
+          <label class="section-sublabel">Select Calligraphy Style:</label>
+          <div class="font-preview-grid">
+            <div class="font-preview-card active" data-font="'Great Vibes', cursive">
+              <span class="preview-text" style="font-family: 'Great Vibes', cursive;">Signature</span>
+              <span class="font-name">Great Vibes (Classic Flow)</span>
+            </div>
+            <div class="font-preview-card" data-font="'Alex Brush', cursive">
+              <span class="preview-text" style="font-family: 'Alex Brush', cursive;">Signature</span>
+              <span class="font-name">Alex Brush (Fine Pen)</span>
+            </div>
+            <div class="font-preview-card" data-font="'Pinyon Script', cursive">
+              <span class="preview-text" style="font-family: 'Pinyon Script', cursive;">Signature</span>
+              <span class="font-name">Pinyon Script (Diplomatic)</span>
+            </div>
+            <div class="font-preview-card" data-font="'Allura', cursive">
+              <span class="preview-text" style="font-family: 'Allura', cursive;">Signature</span>
+              <span class="font-name">Allura (Flourished Hand)</span>
+            </div>
+            <div class="font-preview-card" data-font="'Dancing Script', cursive">
+              <span class="preview-text" style="font-family: 'Dancing Script', cursive;">Signature</span>
+              <span class="font-name">Dancing Script (Modern)</span>
+            </div>
+            <div class="font-preview-card" data-font="'Parisienne', cursive">
+              <span class="preview-text" style="font-family: 'Parisienne', cursive;">Signature</span>
+              <span class="font-name">Parisienne (Executive)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Method Panel 2: Draw Live -->
+        <div class="method-panel" id="methodDrawPanel">
+          <p class="draw-instruction">Use your mouse, trackpad, or finger to draw a custom signature below:</p>
+          <div class="modal-draw-canvas-box">
+            <canvas id="modalDrawCanvas" width="500" height="140"></canvas>
+          </div>
+          <div class="draw-toolbar">
+            <div class="stroke-width-wrap">
+              <span>Pen Width:</span>
+              <input type="range" id="modalPenWidth" min="1.5" max="5.5" step="0.5" value="2.5">
+            </div>
+            <button class="btn btn-glass" id="modalClearDrawBtn"><i data-lucide="eraser"></i> Clear Pad</button>
+          </div>
+        </div>
+
+        <!-- Method Panel 3: Executive Presets -->
+        <div class="method-panel" id="methodPresetPanel">
+          <p class="draw-instruction">Choose from professional realistic executive signatures:</p>
+          <div class="preset-signatures-grid">
+            <div class="preset-sign-card active" data-preset="1">
+              <svg viewBox="0 0 240 70" class="preset-sign-svg">
+                <path d="M 15,50 Q 30,10 50,30 T 90,25 Q 110,60 140,20 T 190,45 Q 220,15 230,35" fill="none"
+                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                <path d="M 25,55 Q 100,58 215,48" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" />
+              </svg>
+              <span>Classic Executive</span>
+            </div>
+            <div class="preset-sign-card" data-preset="2">
+              <svg viewBox="0 0 240 70" class="preset-sign-svg">
+                <path d="M 20,45 C 30,15 45,15 55,45 C 65,10 75,50 95,35 C 115,20 140,55 170,25 C 190,5 210,40 225,30"
+                  fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                <circle cx="230" cy="30" r="2.5" fill="currentColor" />
+              </svg>
+              <span>Distinguished Dean</span>
+            </div>
+            <div class="preset-sign-card" data-preset="3">
+              <svg viewBox="0 0 240 70" class="preset-sign-svg">
+                <path d="M 15,25 Q 40,5 60,40 T 110,20 Q 140,55 170,30 T 225,25" fill="none" stroke="currentColor"
+                  stroke-width="2.2" stroke-linecap="round" />
+                <path d="M 40,55 C 90,62 160,58 220,52" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" />
+              </svg>
+              <span>Director's Flourish</span>
+            </div>
+            <div class="preset-sign-card" data-preset="4">
+              <svg viewBox="0 0 240 70" class="preset-sign-svg">
+                <path d="M 20,50 L 35,15 L 50,45 L 85,25 L 115,50 L 140,20 L 175,45 L 220,20" fill="none"
+                  stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Bold Geometric</span>
+            </div>
+            <div class="preset-sign-card" data-preset="5">
+              <svg viewBox="0 0 240 70" class="preset-sign-svg">
+                <path d="M 15,40 Q 35,10 45,40 T 75,30 Q 95,15 115,45 T 160,35 Q 185,10 215,35" fill="none"
+                  stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+                <path d="M 30,52 Q 120,60 210,50" fill="none" stroke="currentColor" stroke-width="1.4"
+                  stroke-linecap="round" />
+              </svg>
+              <span>Academic Registrar</span>
+            </div>
+            <div class="preset-sign-card" data-preset="6">
+              <svg viewBox="0 0 240 70" class="preset-sign-svg">
+                <path d="M 25,20 C 15,55 45,55 55,30 C 65,15 85,45 105,25 C 130,5 150,55 185,25 C 205,10 220,40 230,25"
+                  fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+              </svg>
+              <span>Chancellor Script</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Method Panel 4: Upload Image -->
+        <div class="method-panel" id="methodUploadPanel">
+          <div class="file-upload-box modal-upload-box">
+            <input type="file" id="modalSignUploadInput" accept="image/*">
+            <div class="upload-cta">
+              <i data-lucide="upload-cloud"></i>
+              <span>Click or drag image file here (PNG / JPG / SVG)</span>
+              <span class="upload-hint">Transparent PNG works best</span>
+            </div>
+          </div>
+          <div id="modalUploadPreviewBox" class="upload-preview-box hidden">
+            <img id="modalUploadPreviewImg" src="" alt="Uploaded signature preview">
+            <button id="modalRemoveUploadBtn" class="btn-tiny btn-danger"><i data-lucide="trash-2"></i> Remove</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-glass" id="cancelSignModalBtn">Cancel</button>
+        <button class="btn btn-primary" id="applySignModalBtn"><i data-lucide="check"></i> Apply to Certificate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Batch / Bulk Modal -->
+  <div class="modal-overlay hidden" id="batchModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="layers"></i>
+          <h3>Bulk Certificate Generation</h3>
+        </div>
+        <button class="modal-close-btn" id="closeBatchModal"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-intro">
+          Enter multiple recipient names (one per line) to generate and download or print in batch!
+        </p>
+        <div class="form-group">
+          <label for="batchNames">Recipient Names (One name per line)</label>
+          <textarea id="batchNames" rows="6"
+            placeholder="Eleanor Vance&#10;Johnathan Reed&#10;Sophia Chen&#10;Mateo Hernandez&#10;Aria Patel"></textarea>
+        </div>
+        <div class="batch-status-bar hidden" id="batchStatus">
+          <div class="batch-progress">
+            <div class="progress-fill" id="batchProgressBar"></div>
+          </div>
+          <span id="batchStatusText">Preparing 0 certificates...</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-glass" id="cancelBatchBtn">Cancel</button>
+        <button class="btn btn-secondary" id="previewBatchBtn"><i data-lucide="eye"></i> Preview Names</button>
+        <button class="btn btn-primary" id="startBatchPdfBtn"><i data-lucide="file-text"></i> Download Multi-Page
+          PDF</button>
+        <button class="btn btn-accent" id="startBatchPrintBtn"><i data-lucide="printer"></i> Batch Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Hidden Container for Batch Printing -->
+  <div id="batchPrintContainer" class="batch-print-container"></div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
