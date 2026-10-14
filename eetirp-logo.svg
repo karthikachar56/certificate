@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 300" width="100%" height="100%" class="eetirp-svg-mark">
+  <defs>
+    <!-- Dynamic Color Gradients for EETIRP -->
+    <linearGradient id="eetirpBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--ee-accent-1, #0077ff)" />
+      <stop offset="100%" stop-color="var(--ee-accent-2, #0051cb)" />
+    </linearGradient>
+
+    <linearGradient id="eetirpDarkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="var(--ee-dark-1, #0a192f)" />
+      <stop offset="100%" stop-color="var(--ee-dark-2, #07111e)" />
+    </linearGradient>
+
+    <linearGradient id="eetirpCyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--ee-cyan-1, #00d2ff)" />
+      <stop offset="100%" stop-color="var(--ee-cyan-2, #0099ff)" />
+    </linearGradient>
+  </defs>
+
+  <!-- Hexagonal Geometric 3D Emblem -->
+  <g id="eetirpEmblem" transform="translate(145, 10)">
+    <!-- Top Bar of Hexagon E -->
+    <polygon points="20,10 90,10 82,32 30,32" fill="url(#eetirpDarkGrad)" />
+    
+    <!-- Upper Left Diagonal -->
+    <polygon points="5,38 20,10 30,32 18,52" fill="url(#eetirpDarkGrad)" opacity="0.9" />
+
+    <!-- Middle Bar of Hexagon E -->
+    <polygon points="2,60 70,60 62,82 14,82" fill="url(#eetirpDarkGrad)" />
+    
+    <!-- Lower Left Diagonal -->
+    <polygon points="2,60 14,82 28,110 16,110" fill="url(#eetirpDarkGrad)" opacity="0.95" />
+
+    <!-- Bottom Bar of Hexagon E -->
+    <polygon points="16,110 28,110 40,88 90,88 78,110 32,110" fill="url(#eetirpDarkGrad)" />
+
+    <!-- Right Blue Chevron Facet (Completing Hexagon) -->
+    <polygon points="90,10 102,10 134,60 102,110 90,110 118,60" fill="url(#eetirpBlueGrad)" />
+    <!-- Inner Blue Fold Shadow -->
+    <polygon points="78,110 90,110 118,60 106,60" fill="url(#eetirpBlueGrad)" opacity="0.85" />
+  </g>
+
+  <!-- EETIRP Wordmark -->
+  <g id="eetirpWordmark" transform="translate(0, 180)">
+    <!-- Text EETIRP rendered with precision spacing -->
+    <text x="225" y="0" text-anchor="middle" font-family="'Outfit', 'Montserrat', sans-serif" font-size="46" font-weight="900" letter-spacing="12" fill="url(#eetirpDarkGrad)">
+      EET<tspan fill="url(#eetirpCyanGrad)">I</tspan>RP
+    </text>
+
+    <!-- Tagline: INNOVATE. INTEGRATE. ELEVATE. -->
+    <g transform="translate(0, 36)">
+      <!-- Left line -->
+      <line x1="45" y1="-5" x2="85" y2="-5" stroke="url(#eetirpCyanGrad)" stroke-width="2" />
+      <text x="225" y="0" text-anchor="middle" font-family="'Outfit', 'Montserrat', sans-serif" font-size="12" font-weight="700" letter-spacing="4" fill="url(#eetirpDarkGrad)" opacity="0.85">
+        INNOVATE. INTEGRATE. ELEVATE.
+      </text>
+      <!-- Right line -->
+      <line x1="365" y1="-5" x2="405" y2="-5" stroke="url(#eetirpCyanGrad)" stroke-width="2" />
+    </g>
+  </g>
+</svg>
