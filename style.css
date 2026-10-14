@@ -2207,20 +2207,20 @@ body.edit-mode-active .editable-element:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Mode 1: Vector Emblem with Sleek Dark Badge (Default, Matches Uploaded Image) */
+/* Mode 1: Vector Emblem with Clean White Badge (Matches White Background & EETIRP) */
 .cert-kh-logo-wrapper.logo-mode-vector-badge {
-  background: #020716;
+  background: #ffffff;
   border-radius: 12px;
-  padding: 6px 16px;
-  border: 1px solid rgba(0, 210, 255, 0.25);
-  box-shadow: 0 4px 14px rgba(0, 10, 30, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  padding: 4px 14px;
+  border: 1px solid rgba(0, 119, 255, 0.25);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 
 .cert-kh-logo-wrapper.logo-mode-vector-badge .kaurahub-svg-mark {
-  --kh-pillar-1: #ffffff;
-  --kh-pillar-2: #e2e8f0;
-  --kh-text-1: #ffffff;
-  --kh-text-2: #f1f5f9;
+  --kh-pillar-1: #0a192f;
+  --kh-pillar-2: #1e293b;
+  --kh-text-1: #0a192f;
+  --kh-text-2: #1e293b;
 }
 
 /* Mode 2: Clean Vector Mark (Transparent background, blends into certificate) */
