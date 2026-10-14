@@ -7,8 +7,8 @@
     </linearGradient>
 
     <linearGradient id="khPillarGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="var(--kh-pillar-1, #ffffff)" />
-      <stop offset="100%" stop-color="var(--kh-pillar-2, #e2e8f0)" />
+      <stop offset="0%" stop-color="var(--kh-pillar-1, #0a192f)" />
+      <stop offset="100%" stop-color="var(--kh-pillar-2, #1e293b)" />
     </linearGradient>
 
     <linearGradient id="khTextGrad" x1="0%" y1="0%" x2="0%" y2="100%">
